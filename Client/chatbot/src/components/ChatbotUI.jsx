@@ -64,6 +64,7 @@ export default function ChatbotUI() {
       data: { message: input },
       headers: { "Content-Type": "application/json" },
     })
+<<<<<<< HEAD
       .then((response) => {
         // Log the full response for debugging
         console.log("API Response Status:", response.status);
@@ -76,13 +77,25 @@ export default function ChatbotUI() {
           throw new Error("Empty response data");
         }
        
+=======
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("API Response:", data);
+        
+>>>>>>> 3b095fee713cfe3b08f36e215a5180c3c00a33df
         // Create a response message using the sentiment from the API
         const botMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
+<<<<<<< HEAD
           content: response.data.sentiment
             ? response.data.sentiment
             : "Couldn't find sentiment in the response. Response data: " + JSON.stringify(response.data),
+=======
+          content: data.sentiment 
+            ? data.sentiment 
+            : "couldn't find sentiment",
+>>>>>>> 3b095fee713cfe3b08f36e215a5180c3c00a33df
         };
  
         setMessages((prev) => [...prev, botMessage]);
