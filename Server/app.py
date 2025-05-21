@@ -1,20 +1,28 @@
 from flask import Flask, request, jsonify
+from dotenv import load_dotenv
+import os
 import openai
 
+# Load environment variables from .env file
+load_dotenv()
+
+ 
 app = Flask(__name__)
 
-# Azure OpenAI config
+# Azure OpenAI configuration
 openai.api_type = "azure"
-openai.api_base = "https://firstprojct-resource.cognitiveservices.azure.com/"
+openai.api_base = os.getenv("AZURE_OPENAI_ENDPOINT")
 openai.api_version = "2025-01-01-preview"
-openai.api_key = "CLCajVeVhr7WKiOB1AsPnz2SL9zq7zOkZkXWicfVq6Np4UygsyXKJQQJ99BEACHYHv6XJ3w3AAAAACOGR80k"
-
-DEPLOYMENT_NAME = "gpt-4.1"
+openai.api_key = os.getenv("AZURE_OPENAI_KEY")
+DEPLOYMENT_NAME = os.getenv("AZURE_OPENAI_DEPLOYMENT")
 
 @app.route('/api/v1/sentiment', methods=['POST'])
 def classify():
     data = request.get_json()
     ticket_text = data.get("message", "")
+
+    if not ticket_text:
+        return jsonify({"error": "No message provided"}), 400
 
     messages = [
         {"role": "system", "content": "You are a sentiment classifier for support tickets. Classify each as Positive, Neutral, or Negative."},
@@ -30,7 +38,8 @@ def classify():
         return jsonify({"sentiment": result})
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("❌ Error:", str(e))  # Log error to console
+        return jsonify({"error": f"Error communicating with OpenAI: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
