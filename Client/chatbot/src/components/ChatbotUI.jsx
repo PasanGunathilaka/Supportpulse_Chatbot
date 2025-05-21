@@ -43,20 +43,41 @@ export default function ChatbotUI() {
     setInput("");
     setIsLoading(true);
 
-    // Simulate API delay (0.5-1.5 seconds)
-    setTimeout(
-      () => {
+    // Send POST request to the API endpoint
+    fetch("http://127.0.0.1:5000/classify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ message: input }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("API Response:", data);
+        
         const botMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: getRandomPositiveResponse(),
+          content: data.message || getRandomPositiveResponse(),
         };
 
         setMessages((prev) => [...prev, botMessage]);
+      })
+      .catch((error) => {
+        console.error("Error calling API:", error);
+        
+        // Fallback to random response in case of error
+        const botMessage = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: "Sorry, I'm having trouble connecting to the server. Please try again later.",
+        };
+
+        setMessages((prev) => [...prev, botMessage]);
+      })
+      .finally(() => {
         setIsLoading(false);
-      },
-      500 + Math.random() * 1000
-    );
+      });
   };
 
   return (
