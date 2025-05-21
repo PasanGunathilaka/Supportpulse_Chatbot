@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import openai
@@ -6,8 +7,8 @@ import openai
 # Load environment variables from .env file
 load_dotenv()
 
- 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:3000"])
 
 # Azure OpenAI configuration
 openai.api_type = "azure"

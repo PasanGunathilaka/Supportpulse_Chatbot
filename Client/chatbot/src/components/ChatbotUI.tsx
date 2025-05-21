@@ -1,14 +1,12 @@
 import React, { useState, FormEvent as ReactFormEvent } from "react"
-import { Send } from "lucide-react"
+import { Send, User, Bot } from "lucide-react"
 
-// Message type definition
 type Message = {
   id: string
   role: "user" | "assistant"
   content: string
 }
 
-// Array of positive responses
 const positiveResponses = [
   "That's fantastic! I'm here to help with anything you need.",
   "Great question! I'm happy to assist you.",
@@ -27,19 +25,16 @@ export default function ChatbotUI() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  // Function to get a random positive response
   const getRandomPositiveResponse = () => {
     const randomIndex = Math.floor(Math.random() * positiveResponses.length)
     return positiveResponses[randomIndex]
   }
 
-  // Handle form submission
   const handleSubmit = (e: ReactFormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!input.trim()) return
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
@@ -50,45 +45,57 @@ export default function ChatbotUI() {
     setInput("")
     setIsLoading(true)
 
-    // Simulate API delay (0.5-1.5 seconds)
-    setTimeout(
-      () => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: "assistant",
-          content: getRandomPositiveResponse(),
-        }
+    setTimeout(() => {
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: getRandomPositiveResponse(),
+      }
 
-        setMessages((prev) => [...prev, botMessage])
-        setIsLoading(false)
-      },
-      500 + Math.random() * 1000,
-    )
+      setMessages((prev) => [...prev, botMessage])
+      setIsLoading(false)
+    }, 500 + Math.random() * 1000)
   }
 
   return (
     <div className="flex flex-col h-screen max-w-3xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">AI Chatbot</h1>
+      <h1 className="text-2xl font-bold mb-4">SupportPulse<br /><span className="text-sm text-gray-500">Your AI Support Assistant</span></h1>
 
-      {/* Chat messages container */}
       <div className="flex-1 overflow-y-auto mb-4 space-y-4 p-4 rounded-lg border border-gray-200">
         {messages.length === 0 ? (
           <div className="text-center text-gray-500 my-8">Send a message to start the conversation</div>
         ) : (
           messages.map((message) => (
-            <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[80%] p-3 rounded-lg ${
-                  message.role === "user"
-                    ? "bg-blue-500 text-white rounded-tr-none"
-                    : "bg-gray-200 text-gray-800 rounded-tl-none"
-                }`}
-              >
-                {message.content}
+            <div
+              key={message.id}
+              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div className="flex items-end space-x-2">
+                {/* Message bubble */}
+                {message.role === "assistant" && (
+                  <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                    <Bot size={16} className="text-gray-700" />
+                  </div>
+                )}
+                <div
+                  className={`max-w-[80%] p-3 rounded-lg ${
+                    message.role === "user"
+                      ? "bg-blue-500 text-white rounded-tr-none"
+                      : "bg-gray-200 text-gray-800 rounded-tl-none"
+                  }`}
+                >
+                  {message.content}
+                </div>
+                {message.role === "user" && (
+                  <div className="w-8 h-8 rounded-full bg-blue-300 flex items-center justify-center">
+                    <User size={16} className="text-white" />
+                  </div>
+                )}
               </div>
             </div>
           ))
         )}
+
         {isLoading && (
           <div className="flex justify-start">
             <div className="max-w-[80%] p-3 rounded-lg bg-gray-200 text-gray-800 rounded-tl-none">
@@ -111,7 +118,6 @@ export default function ChatbotUI() {
         )}
       </div>
 
-      {/* Input form */}
       <form onSubmit={handleSubmit} className="flex items-center space-x-2 border border-gray-300 rounded-lg p-2">
         <input
           type="text"
