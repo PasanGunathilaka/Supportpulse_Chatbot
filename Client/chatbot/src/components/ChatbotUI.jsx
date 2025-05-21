@@ -64,7 +64,6 @@ export default function ChatbotUI() {
       data: { message: input },
       headers: { "Content-Type": "application/json" },
     })
-<<<<<<< HEAD
       .then((response) => {
         // Log the full response for debugging
         console.log("API Response Status:", response.status);
@@ -77,25 +76,13 @@ export default function ChatbotUI() {
           throw new Error("Empty response data");
         }
        
-=======
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("API Response:", data);
-        
->>>>>>> 3b095fee713cfe3b08f36e215a5180c3c00a33df
         // Create a response message using the sentiment from the API
         const botMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-<<<<<<< HEAD
           content: response.data.sentiment
             ? response.data.sentiment
             : "Couldn't find sentiment in the response. Response data: " + JSON.stringify(response.data),
-=======
-          content: data.sentiment 
-            ? data.sentiment 
-            : "couldn't find sentiment",
->>>>>>> 3b095fee713cfe3b08f36e215a5180c3c00a33df
         };
  
         setMessages((prev) => [...prev, botMessage]);
@@ -149,7 +136,7 @@ export default function ChatbotUI() {
             <div key={message.id} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
               {message.role !== "user" && (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mr-2 flex-shrink-0">
-                 <svg
+                <svg
   xmlns="http://www.w3.org/2000/svg"
   width="16"
   height="16"
@@ -179,7 +166,7 @@ export default function ChatbotUI() {
               </div>
               {message.role === "user" && (
                 <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center ml-2 flex-shrink-0">
-               <svg
+                 <svg
   xmlns="http://www.w3.org/2000/svg"
   width="16"
   height="16"
@@ -244,3 +231,4 @@ export default function ChatbotUI() {
     </div>
   );
 }
+ 
