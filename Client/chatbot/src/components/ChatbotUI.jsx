@@ -55,10 +55,13 @@ export default function ChatbotUI() {
       .then((data) => {
         console.log("API Response:", data);
         
+        // Create a response message using the sentiment from the API
         const botMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: data.message || getRandomPositiveResponse(),
+          content: data.sentiment 
+            ? data.sentiment 
+            : "couldn't find sentiment",
         };
 
         setMessages((prev) => [...prev, botMessage]);
